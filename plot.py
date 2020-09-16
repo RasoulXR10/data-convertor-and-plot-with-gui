@@ -7,4 +7,3 @@ x = [i[0] for i in list_tuple]
 y = [i[1] for i in list_tuple]
 plt.plot(x, y)
 plt.show()
-
