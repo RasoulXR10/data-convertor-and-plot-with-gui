@@ -8,144 +8,116 @@ import matplotlib.pyplot
 import matplotlib
 matplotlib.use('TkAgg')
 
-root = tk.Tk()
-root.geometry("900x600")
-root.title('Convertor and Plot')
+
 # root.iconbitmap()
 
 # # # All Frames & Labels # # #
 
 
-sf_frame = tk.Frame(root, bg='#80b3ff', bd=5)
-sf_frame.place(relx=0.5, rely=0.05, relwidth=0.9, relheight=0.06, anchor="n")
+class App:
 
-label1 = tk.Label(sf_frame, text="Selected File:", font=('Courier', 12))
-label1.place(relx=0, relwidth=0.15, relheight=1)
+    result = []
+    root = None
+    filename_label = None
+    table1_frame = None
+    table2_frame = None
+    plot1_frame = None
+    plot2_frame = None
 
-filename_label = tk.Label(
-    sf_frame, text="", anchor='w', justify="left", font=('Courier New', 15))
-filename_label.place(relx=0.16, relwidth=0.45, relheight=1)
-
-label2 = tk.Label(root, text="Selected Data",
-                  font=('Courier', 12), bg='#f2f2f2')
-label2.place(relx=0.055, rely=0.18, relwidth=0.17, relheight=0.05)
-
-label3 = tk.Label(root, text="Converted Data",
-                  font=('Courier', 12), bg='#f2f2f2')
-label3.place(relx=0.405, rely=0.18, relwidth=0.17, relheight=0.05)
-
-# table frames #
-table1_frame = tk.Frame(root, bg='#80b3ff', bd=5)
-table1_frame.place(relx=0.05, rely=0.25, relwidth=0.18,
-                   relheight=0.6, anchor="nw")
-
-table2_frame = tk.Frame(root, bg='#80b3ff', bd=5)
-table2_frame.place(relx=0.4, rely=0.25, relwidth=0.18,
-                   relheight=0.6, anchor="nw")
-
-
-# plot frames #
-
-plot1_frame = tk.Frame(root, bg='#80b3ff', bd=5)
-plot1_frame.place(relx=0.6, rely=0.15, relwidth=0.35,
-                  relheight=0.38, anchor='nw')
-
-plot2_frame = tk.Frame(root, bg='#80b3ff', bd=5)
-plot2_frame.place(relx=0.6, rely=0.58, relwidth=0.35,
-                  relheight=0.38, anchor='nw')
-
-
-# # # All Functions # # #
-
-class ReadFile:
     def __init__(self):
-        pass
+        self.read_file = ReadFile()
+        self.root = tk.Tk()
+        self.root.geometry("900x600")
+        self.root.title('Convertor and Plot')
+        self.sf_frame = tk.Frame(self.root, bg='#80b3ff', bd=5)
+        self.sf_frame.place(relx=0.5, rely=0.05, relwidth=0.9,
+                            relheight=0.06, anchor="n")
 
-    def choose_file(self):
-        file = tk.filedialog.askopenfile(mode='r',
-                                              initialdir="/", title="Select A File", filetypes=(('Text files', '*.txt'),))
-        self.content = file.readlines()
-        return file
+        self.label1 = tk.Label(self.sf_frame, text="Selected File:",
+                               font=('Courier', 12))
+        self.label1.place(relx=0, relwidth=0.15, relheight=1)
 
-    def create_result(self, file):
-        self.res = []
-        mylist = [line.rstrip('\n') for line in self.content]
-        for element in mylist[1:]:
-            self.res.append(element)
-        self.result = [tuple(map(int, sub.split())) for sub in self.res]
-        return (self.result)
+        self.filename_label = tk.Label(
+            self.sf_frame, text="", anchor='w', justify="left", font=('Courier New', 15))
+        self.filename_label.place(relx=0.16, relwidth=0.45, relheight=1)
 
-    # convert function #
+        self.label2 = tk.Label(self.root, text="Selected Data",
+                               font=('Courier', 12), bg='#f2f2f2')
+        self.label2.place(relx=0.055, rely=0.18, relwidth=0.17, relheight=0.05)
 
-    def convert_eq(self, result):
+        self.label3 = tk.Label(self.root, text="Converted Data",
+                               font=('Courier', 12), bg='#f2f2f2')
+        self.label3.place(relx=0.405, rely=0.18, relwidth=0.17, relheight=0.05)
 
-        x = [i[0] for i in result]
-        y = [i[1] for i in result]
-        new_x = [j + 10 for j in x]
-        new_y = [k + 20 for k in y]
-        convert_result = list(zip(new_x, new_y))
-        return convert_result
+        # table frames #
+        self.table1_frame = tk.Frame(self.root, bg='#80b3ff', bd=5)
+        self.table1_frame.place(relx=0.05, rely=0.25, relwidth=0.18,
+                                relheight=0.6, anchor="nw")
 
+        self.table2_frame = tk.Frame(self.root, bg='#80b3ff', bd=5)
+        self.table2_frame.place(relx=0.4, rely=0.25, relwidth=0.18,
+                                relheight=0.6, anchor="nw")
 
-read_file = ReadFile()
+        # plot frames #
+        self.plot1_frame = tk.Frame(self.root, bg='#80b3ff', bd=5)
+        self.plot1_frame.place(relx=0.6, rely=0.15, relwidth=0.35,
+                               relheight=0.38, anchor='nw')
 
-result = []
+        self.plot2_frame = tk.Frame(self.root, bg='#80b3ff', bd=5)
+        self.plot2_frame.place(relx=0.6, rely=0.58, relwidth=0.35,
+                               relheight=0.38, anchor='nw')
 
+        # # # All Buttons # # #
+        self.choose_button = tk.Button(self.sf_frame, text="Choose TXT File",
+                                       font=('Courier', 12), command=self.selected_file)
+        self.choose_button.place(relx=0.65, relwidth=0.15, relheight=1)
 
-def selected_file():
-    global result
-    file = read_file.choose_file()
-    filename_label.configure(text=file.name)
-    res = read_file.create_result(file)
-    result = res
+        self.insert_button = tk.Button(self.sf_frame, text="Insert File",
+                                       font=('Courier', 12), command=self.insert_data)
+        self.insert_button.place(relx=0.85, relwidth=0.15, relheight=1)
 
+        self.convert_table_button = tk.Button(self.root, text="Convert With Eq",
+                                              font=('Courier', 12), command=self.convert_data)
+        self.convert_table_button.place(
+            relx=0.24, rely=0.4, relwidth=0.15, relheight=0.05)
 
-def insert_data():
-    Table(table1_frame, result)
+        self.plot_selected_data_button = tk.Button(
+            self.root, text="Plot Selected Data", font=('Courier', 12), command=self.plot_selected_data)
+        self.plot_selected_data_button.place(
+            relx=0.054, rely=0.87, relwidth=0.17, relheight=0.05)
 
+        self.plot_converted_data_button = tk.Button(
+            self.root, text="Plot Converted Data", font=('Courier', 12), command=self.plot_converted_data)
+        self.plot_converted_data_button.place(
+            relx=0.404, rely=0.87, relwidth=0.17, relheight=0.05)
 
-def convert_data():
-    Table(table2_frame, read_file.convert_eq(result))
+        self.root.mainloop()
 
+    # # # All Functions # # #
 
-# plot #
+    def selected_file(self):
+        res = self.read_file.create_result(self)
+        file = self.read_file.choose_file()
+        self.filename_label.configure(text=file.name)
+        self.result = self.read_file.create_result(file)
 
+    def insert_data(self):
+        Table(self.table1_frame, self.result)
 
-def plot_selected_data():
-    Plot(plot1_frame, result)
+    def convert_data(self):
+        Table(self.table2_frame, self.read_file.convert_eq(self.result))
 
+    # plot #
 
-def plot_converted_data():
-    Plot(plot2_frame, read_file.convert_eq(result))
+    def plot_selected_data(self):
+        Plot(self.plot1_frame, self.result)
 
+    def plot_converted_data(self):
+        Plot(self.plot2_frame, self.read_file.convert_eq(self.result))
 
-# # # All Buttons # # #
-choose_button = tk.Button(sf_frame, text="Choose TXT File",
-                          font=('Courier', 12), command=selected_file)
-choose_button.place(relx=0.65, relwidth=0.15, relheight=1)
+    # # # All Classes # # #
 
-
-insert_button = tk.Button(sf_frame, text="Insert File",
-                          font=('Courier', 12), command=insert_data)
-insert_button.place(relx=0.85, relwidth=0.15, relheight=1)
-
-
-convert_table_button = tk.Button(root, text="Convert With Eq",
-                                 font=('Courier', 12), command=convert_data)
-convert_table_button.place(relx=0.24, rely=0.4, relwidth=0.15, relheight=0.05)
-
-
-plot_selected_data_button = tk.Button(
-    root, text="Plot Selected Data", font=('Courier', 12), command=plot_selected_data)
-plot_selected_data_button.place(
-    relx=0.054, rely=0.87, relwidth=0.17, relheight=0.05)
-
-plot_converted_data_button = tk.Button(
-    root, text="Plot Converted Data", font=('Courier', 12), command=plot_converted_data)
-plot_converted_data_button.place(
-    relx=0.404, rely=0.87, relwidth=0.17, relheight=0.05)
-
-# tabels #
+    # tabels #
 
 
 class Table:
@@ -189,4 +161,34 @@ class Plot:
         canvas.draw()
 
 
-root.mainloop()
+class ReadFile:
+
+    content = str()
+
+    def __init__(self):
+        pass
+
+    def choose_file(self):
+        self.file = tk.filedialog.askopenfile(mode='r',
+                                              initialdir="/", title="Select A File", filetypes=(('Text files', '*.txt'),))
+        self.content = self.file.readlines()
+        return self.file
+
+    def create_result(self, file):
+        self.res = []
+        mylist = [line.rstrip('\n') for line in self.content]
+        for element in mylist[1:]:
+            self.res.append(element)
+        self.result = [tuple(map(int, sub.split())) for sub in self.res]
+        return (self.result)
+
+    # convert function #
+
+    def convert_eq(self, result):
+
+        x = [i[0] for i in result]
+        y = [i[1] for i in result]
+        new_x = [j + 10 for j in x]
+        new_y = [k + 20 for k in y]
+        convert_result = list(zip(new_x, new_y))
+        return convert_result
